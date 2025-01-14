@@ -1,0 +1,38 @@
+name: Docker Build CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: 'Build and push image Kiwi'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.AZURE_DOCKER_USERNAME }} 
+          password: ${{ secrets.AZURE_DOCKER_TOKEN }} 
+      - run: |
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}
+      - name: 'Build and push image Accenture'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACN_REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.ACN_AZURE_DOCKER_USERNAME }} 
+          password: ${{ secrets.ACN_AZURE_DOCKER_TOKEN }} 
+      - run: |
+          docker build . -t ${{ secrets.ACN_REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}-${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }} 
+          docker push ${{ secrets.ACN_REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}-${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }} 
+      - name: Build tag id
+        run: echo "${{ secrets.REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}-${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}"
