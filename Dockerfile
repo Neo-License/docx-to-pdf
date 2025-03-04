@@ -4,8 +4,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install -y software-properties-common
-# https://launchpad.net/~libreoffice/+archive/ubuntu/libreoffice-7-3
-#RUN add-apt-repository ppa:libreoffice/libreoffice-7-3
 RUN add-apt-repository ppa:libreoffice/ppa
 RUN apt-get update
 RUN apt-get install -y libreoffice
