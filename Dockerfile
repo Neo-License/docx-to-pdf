@@ -46,6 +46,10 @@ ENV PATH=$MAVEN_HOME/bin:$PATH
 FROM base_java_maven
 
 WORKDIR /project
+ENV JAVA_HOME=/usr/local/jdk-17.0.8.1+1
+ENV PATH=$JAVA_HOME/bin:$PATH
+ENV MAVEN_HOME=/usr/local/apache-maven-3.9.5
+ENV PATH=$MAVEN_HOME/bin:$PATH
 COPY ./pom.xml .
 RUN mvn verify clean -Dmaven.artifact.threads=8 --fail-never
 
@@ -55,6 +59,8 @@ RUN mvn package
 RUN cp ./target/*.jar ./app.jar
 COPY ./fonts/ /usr/share/fonts/custom
 RUN rm -rf ./src ./pom.xml
+RUN chown -R ubuntu:ubuntu /project
+USER ubuntu
 EXPOSE 8080
 
 CMD ["java", "-jar", "./app.jar"]
