@@ -34,5 +34,15 @@ jobs:
           docker build . -t ${{ secrets.ACN_REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}-${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }} 
           docker push ${{ secrets.ACN_REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}-${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }} 
+      - name: 'Build and push image Shell'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.SHELL_REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.SHELL_AZURE_DOCKER_USERNAME }} 
+          password: ${{ secrets.SHELL_AZURE_DOCKER_TOKEN }} 
+      - run: |
+          docker build . -t ${{ secrets.SHELL_REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}-${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }} 
+          docker push ${{ secrets.SHELL_REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}-${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }} 
       - name: Build tag id
         run: echo "${{ secrets.REGISTRY_LOGIN_SERVER }}/docx-to-pdf:${GITHUB_REF##*/}-${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}"
