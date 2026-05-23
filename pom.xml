@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.4</version>
+		<version>3.5.14</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>dev.alhaddar</groupId>
@@ -15,7 +15,7 @@
 	<description>docx-to-pdf-kotlin</description>
 	<properties>
 		<java.version>17</java.version>
-		<kotlin.version>1.8.22</kotlin.version>
+		<kotlin.version>1.9.25</kotlin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -80,6 +80,39 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Force Tomcat to patched version ahead of Spring Boot BOM -->
+			<dependency>
+				<groupId>org.apache.tomcat.embed</groupId>
+				<artifactId>tomcat-embed-core</artifactId>
+				<version>10.1.55</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.tomcat.embed</groupId>
+				<artifactId>tomcat-embed-el</artifactId>
+				<version>10.1.55</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.tomcat.embed</groupId>
+				<artifactId>tomcat-embed-websocket</artifactId>
+				<version>10.1.55</version>
+			</dependency>
+			<!-- CVE-2017-1000487: plexus-utils < 3.0.16 (CRITICAL); build-time only -->
+			<dependency>
+				<groupId>org.codehaus.plexus</groupId>
+				<artifactId>plexus-utils</artifactId>
+				<version>3.5.1</version>
+			</dependency>
+			<!-- CVE-2022-29599: maven-shared-utils < 3.3.4 (CRITICAL); build-time only -->
+			<dependency>
+				<groupId>org.apache.maven.shared</groupId>
+				<artifactId>maven-shared-utils</artifactId>
+				<version>3.3.4</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
